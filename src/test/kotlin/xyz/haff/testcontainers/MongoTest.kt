@@ -15,6 +15,6 @@ class MongoTest(
     test("correctly starts MongoDB container") {
         val status = mongoTemplate.executeCommand("{ serverStatus: 1 }")
 
-        status.get("version") shouldBe "5.0.15"
+        status["version"] shouldBe "5.0.15"
     }
 })
