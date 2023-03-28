@@ -25,7 +25,7 @@ class MongoContainerContextCustomizerFactory : ContextCustomizerFactory {
         else -> null
     }
 
-    private inner class MongoContainerTestContextCustomizer(
+    private class MongoContainerTestContextCustomizer(
         private val tag: String,
     ) : ContextCustomizer {
         override fun customizeContext(
