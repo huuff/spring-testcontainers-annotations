@@ -11,7 +11,6 @@ import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.MongoDBContainer
 
 // TODO: It's likely that I'll need a customizer that's valid for all annotations
-// TODO: Test it
 // TODO: Get version from annotation, maybe even digests
 // TODO: Allow creating a different container for each test, instead of reusing one for all
 private val container by lazy { MongoDBContainer("mongo:focal").apply { this.start() } }
