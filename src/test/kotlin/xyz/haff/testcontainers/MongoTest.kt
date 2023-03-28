@@ -6,10 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.testcontainers.junit.jupiter.Testcontainers
 import xyz.haff.testcontainers.annotation.MongoContainerTest
 
-// TODO: This is not working yet... something strange might be happening but I might be missing some logs
-// check my quotebox project
 // TODO: is the testcontainers annotation necessary?
-@Testcontainers
 @DataMongoTest
 @MongoContainerTest
 class MongoTest(
