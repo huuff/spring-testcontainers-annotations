@@ -6,4 +6,6 @@ import java.lang.annotation.Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Inherited
-annotation class MongoContainerTest()
+annotation class MongoContainerTest(
+    val tag: String = "latest"
+)

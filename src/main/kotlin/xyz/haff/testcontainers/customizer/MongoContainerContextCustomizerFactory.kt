@@ -11,26 +11,35 @@ import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.MongoDBContainer
 
 // TODO: It's likely that I'll need a customizer that's valid for all annotations
-// TODO: Get version from annotation, maybe even digests
 // TODO: Allow creating a different container for each test, instead of reusing one for all
-private val container by lazy { MongoDBContainer("mongo:focal").apply { this.start() } }
 class MongoContainerContextCustomizerFactory : ContextCustomizerFactory {
 
     override fun createContextCustomizer(
         testClass: Class<*>,
         configAttributes: MutableList<ContextConfigurationAttributes>
-    ): ContextCustomizer? = if (AnnotatedElementUtils.hasAnnotation(testClass, MongoContainerTest::class.java)) {
-        MongoContainerTestContextCustomizer()
-    } else { null }
+    ): ContextCustomizer? = when {
+        AnnotatedElementUtils.hasAnnotation(testClass, MongoContainerTest::class.java) -> {
+            val annotation = AnnotatedElementUtils.getMergedAnnotation(testClass, MongoContainerTest::class.java)!!
+            MongoContainerTestContextCustomizer(annotation.tag)
+        }
+        else -> null
+    }
 
-    private inner class MongoContainerTestContextCustomizer : ContextCustomizer {
+    private inner class MongoContainerTestContextCustomizer(
+        private val tag: String,
+    ) : ContextCustomizer {
         override fun customizeContext(
             context: ConfigurableApplicationContext,
             mergedConfig: MergedContextConfiguration
         ) {
-            context.environment.propertySources.addFirst(MapPropertySource("MongoDB Testcontainer Properties",
-                mapOf("spring.data.mongodb.uri" to container.replicaSetUrl)
-            ))
+            val container = MongoDBContainer("mongo:$tag").apply { this.start() }
+
+            context.environment.propertySources.addFirst(
+                MapPropertySource(
+                    "MongoDB Testcontainer Properties",
+                    mapOf("spring.data.mongodb.uri" to container.replicaSetUrl)
+                )
+            )
         }
 
     }
