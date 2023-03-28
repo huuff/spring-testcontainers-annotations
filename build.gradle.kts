@@ -16,6 +16,7 @@ tasks.wrapper {
 
 repositories {
     mavenCentral()
+}
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.spring.boot.get()}"))
