@@ -7,6 +7,10 @@ import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.MongoDBContainer
 import xyz.haff.testcontainers.annotation.MongoContainerTest
 
+private fun createContainer(tag: String) = MongoDBContainer("mongo:$tag").apply {
+    start()
+}
+
 class MongoContainerTestContextCustomizer(
     private val annotation: MongoContainerTest,
 ) : ContextCustomizer {
@@ -14,9 +18,6 @@ class MongoContainerTestContextCustomizer(
     companion object {
         private val persistentContainers: MutableMap<String, MongoDBContainer> = mutableMapOf()
     }
-
-    private fun createContainer(tag: String)
-            = MongoDBContainer("mongo:${annotation.tag}").apply { this.start() }
 
     override fun customizeContext(
         context: ConfigurableApplicationContext,

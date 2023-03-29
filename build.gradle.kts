@@ -27,6 +27,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-redis")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-core:${libs.versions.kotest.get()}")
