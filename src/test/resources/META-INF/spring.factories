@@ -1,2 +1,2 @@
 org.springframework.test.context.ContextCustomizerFactory=\
-  xyz.haff.testcontainers.customizer.MongoContainerContextCustomizerFactory
+  xyz.haff.testcontainers.customizer.TestcontainersContextCustomizerFactory
