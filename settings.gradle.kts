@@ -1,4 +1,4 @@
-rootProject.name = "testcontainers-annotations"
+rootProject.name = "spring-testcontainers-annotations"
 
 dependencyResolutionManagement {
     versionCatalogs {
