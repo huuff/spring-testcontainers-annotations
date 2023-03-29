@@ -11,7 +11,6 @@ import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.MongoDBContainer
 
 // TODO: It's likely that I'll need a customizer that's valid for all annotations
-// TODO: Allow creating a different container for each test, instead of reusing one for all
 class MongoContainerContextCustomizerFactory : ContextCustomizerFactory {
 
     override fun createContextCustomizer(
@@ -20,19 +19,34 @@ class MongoContainerContextCustomizerFactory : ContextCustomizerFactory {
     ): ContextCustomizer? = when {
         AnnotatedElementUtils.hasAnnotation(testClass, MongoContainerTest::class.java) -> {
             val annotation = AnnotatedElementUtils.getMergedAnnotation(testClass, MongoContainerTest::class.java)!!
-            MongoContainerTestContextCustomizer(annotation.tag)
+            MongoContainerTestContextCustomizer(annotation)
         }
         else -> null
     }
 
     private class MongoContainerTestContextCustomizer(
-        private val tag: String,
+        private val annotation: MongoContainerTest,
     ) : ContextCustomizer {
+
+        companion object {
+            private val persistentContainers: MutableMap<String, MongoDBContainer> = mutableMapOf()
+        }
+
+        private fun createContainer(tag: String)
+            = MongoDBContainer("mongo:${annotation.tag}").apply { this.start() }
+
         override fun customizeContext(
             context: ConfigurableApplicationContext,
             mergedConfig: MergedContextConfiguration
         ) {
-            val container = MongoDBContainer("mongo:$tag").apply { this.start() }
+            val container = if (annotation.persistent) {
+                persistentContainers.getOrPut(annotation.tag) {
+                    createContainer(annotation.tag)
+                }
+            } else {
+                createContainer(annotation.tag)
+            }
+
 
             context.environment.propertySources.addFirst(
                 MapPropertySource(
