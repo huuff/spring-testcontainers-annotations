@@ -4,8 +4,6 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin.get()
     id("org.jetbrains.kotlin.plugin.spring") version libs.versions.kotlin.get()
 
-    //id("org.springframework.boot") version libs.versions.spring.boot.get()
-
     id("maven-publish")
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
     id("signing")
@@ -49,10 +47,6 @@ tasks.test {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
 }
-
-//tasks.bootJar {
-    //mainClass.set("xyz.haff.testcontainers.TestcontainersAnnotationsApplication")
-//}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
