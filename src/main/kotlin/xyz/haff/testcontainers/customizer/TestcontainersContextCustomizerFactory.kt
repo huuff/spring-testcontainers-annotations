@@ -6,6 +6,7 @@ import org.springframework.test.context.ContextConfigurationAttributes
 import org.springframework.test.context.ContextCustomizer
 import org.springframework.test.context.ContextCustomizerFactory
 import xyz.haff.testcontainers.annotation.RedisContainerTest
+import xyz.haff.testcontainers.annotation.RedisStackContainerTest
 
 class TestcontainersContextCustomizerFactory : ContextCustomizerFactory {
 
@@ -20,6 +21,10 @@ class TestcontainersContextCustomizerFactory : ContextCustomizerFactory {
         AnnotatedElementUtils.hasAnnotation(testClass, RedisContainerTest::class.java) -> {
             val annotation = AnnotatedElementUtils.getMergedAnnotation(testClass, RedisContainerTest::class.java)!!
             RedisContainerContextCustomizer(annotation)
+        }
+        AnnotatedElementUtils.hasAnnotation(testClass, RedisStackContainerTest::class.java) -> {
+            val annotation = AnnotatedElementUtils.getMergedAnnotation(testClass, RedisStackContainerTest::class.java)!!
+            RedisStackContainerContextCustomizer(annotation)
         }
         else -> null
     }
