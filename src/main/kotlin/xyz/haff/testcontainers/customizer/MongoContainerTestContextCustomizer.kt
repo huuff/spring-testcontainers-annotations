@@ -6,6 +6,7 @@ import org.springframework.test.context.ContextCustomizer
 import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.MongoDBContainer
 import xyz.haff.testcontainers.annotation.MongoContainerTest
+import xyz.haff.testcontainers.util.ContainerFactory
 
 private fun createContainer(tag: String) = MongoDBContainer("mongo:$tag").apply {
     start()
@@ -16,21 +17,14 @@ class MongoContainerTestContextCustomizer(
 ) : ContextCustomizer {
 
     companion object {
-        private val persistentContainers: MutableMap<String, MongoDBContainer> = mutableMapOf()
+        private val containerFactory = ContainerFactory(::createContainer)
     }
 
     override fun customizeContext(
         context: ConfigurableApplicationContext,
         mergedConfig: MergedContextConfiguration
     ) {
-        val container = if (annotation.persistent) {
-            persistentContainers.getOrPut(annotation.tag) {
-                createContainer(annotation.tag)
-            }
-        } else {
-            createContainer(annotation.tag)
-        }
-
+        val container = containerFactory.get(annotation.tag, annotation.persistent)
 
         context.environment.propertySources.addFirst(
             MapPropertySource(

@@ -7,8 +7,8 @@ import org.springframework.test.context.MergedContextConfiguration
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.utility.DockerImageName
-import xyz.haff.testcontainers.annotation.RedisContainerTest
 import xyz.haff.testcontainers.annotation.RedisStackContainerTest
+import xyz.haff.testcontainers.util.ContainerFactory
 
 private fun createContainer(tag: String): GenericContainer<*> =
     GenericContainer(DockerImageName.parse("redis/redis-stack:$tag")).apply {
@@ -24,18 +24,11 @@ class RedisStackContainerContextCustomizer(
 ) : ContextCustomizer {
 
     companion object {
-        private val persistentContainers: MutableMap<String, GenericContainer<*>> = mutableMapOf()
+        private val containerFactory = ContainerFactory(::createContainer)
     }
 
     override fun customizeContext(context: ConfigurableApplicationContext, mergedConfig: MergedContextConfiguration) {
-        // TODO: DRY this and the mongodb one, and especially the redis one
-        val container = if (annotation.persistent) {
-            persistentContainers.getOrPut(annotation.tag) {
-                createContainer(annotation.tag)
-            }
-        } else {
-            createContainer(annotation.tag)
-        }
+        val container = containerFactory.get(annotation.tag, annotation.persistent)
 
         context.environment.propertySources.addFirst(
             MapPropertySource(
