@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "xyz.haff"
-version = "0.2.1"
+version = "0.2.2"
 
 tasks.wrapper {
     gradleVersion = "7.4"
@@ -25,11 +25,14 @@ dependencies {
     implementation(platform("org.testcontainers:testcontainers-bom:${libs.versions.testcontainers.get()}"))
 
     implementation("org.testcontainers:mongodb")
+    implementation("org.testcontainers:rabbitmq")
     implementation("org.springframework.boot:spring-boot-starter-test")
 
     testImplementation(kotlin("test"))
     testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     testImplementation("org.springframework.boot:spring-boot-starter-data-redis")
+    testImplementation("org.springframework.amqp:spring-rabbit-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-amqp")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-core:${libs.versions.kotest.get()}")
